@@ -15,9 +15,11 @@ docker run -P -d --name <nombre contenedor> <nombre imagen>:<tag>
 No puedes mapear puertos a un contenedor existente directamente después de su creación con Docker. El mapeo de puertos debe especificarse en el momento de crear y ejecutar el contenedor.
 
 ### Crear contenedor de Jenkins puertos contenedor: 8080 (interface web) y 50000 (comunicación entre nodos) imagen: jenkins/jenkins:alpine3.18-jdk11
-# COMPLETAR
+```
+docker run -d -p 8080:8080 -p 50000:50000 --name jenkins-master jenkins/jenkins:alpine3.18-jdk11
+```
 
-# COLOCAR UNA CAPTURA DE PANTALLA  DEL ACCESO http://localhost:8080
+![ACCESO http://localhost:8080](imagenes/accesoJenkins.png)
 
 ### ¿Cómo obtener la contraseña solicitada?
 Para obtener la contraseña solicitada es necesario ingresar al contenedor.
@@ -30,12 +32,23 @@ Para obtener la contraseña solicitada es necesario ingresar al contenedor.
 ```
 docker exec <nombre contenedor> <comando> <argumentos opcionales>
 ```
-# COMPLETAR
+
 ### ¿Para qué se usa el comando ls?
+
+El comando ls se utiliza para listar archivos y directorios en un sistema de archivos específico. Sin argumentos adicionales, muestra los nombres de los archivos y directorios en el directorio actual.
+
 ### ¿Para qué sirve el argumento -l junto al comando ls?
+
+El argumento -l (letra ell) se usa junto con ls para mostrar una lista detallada de los archivos y directorios. Esta lista incluye información como permisos, número de enlaces, propietario, grupo, tamaño en bytes, fecha de modificación y nombre del archivo o directorio.
+
 ### Usar el contenedor de jenkins creado previamente y ejecutar el comando ls con el argumento -l
-# COMPLETAR
-# COLOCAR UNA CAPTURA DE PANTALLA
+
+Ejecutando:
+```
+docker exec jenkins-master ls -l
+```
+
+![exec jenkins ls -l](imagenes/jenkinsLsL.png)
 
 ### Para ejecutar un shell interactivo en un contenedor de Docker especificado.
 El comando **docker exec** te permite acceder a la sesión shell de un contenedor en ejecución, estarás dentro del contenedor y podrás ejecutar comandos como si estuvieras en una terminal normal. 
@@ -46,7 +59,7 @@ Para saber qué comando utilizar para abrir una terminal dentro de un contenedor
 ```
 docker exec -i <nombre contenedor> <programa o comando>
 ```
--i: mantiene abierta la entrada estándar (stdin) del contenedor. Esto significa que puedes enviar datos al proceso que se está ejecutando en el contenedor a través de la terminal local. *Sin embargo, esto no asigna un terminal al contenedor, por lo que no podrás ver la salida del proceso de forma interactiva.*
+-i: mantiene abierta la entrada estándar (stdin) del contenedor. Esto significa que puedes enviar datos al proceso que se está ejecutando en el contenedor a través de la terminal local. *Sin embargo, esto no asigna una terminal al contenedor, por lo que no podrás ver la salida del proceso de forma interactiva.*
 
 ### Ejecutar una de las siguientes instrucciones
 ```
@@ -69,7 +82,8 @@ Ejecutar
 ```
 whoami
 ```
-# COLOCAR UNA CAPTURA DE PANTALLA
+
+![exec bash](imagenes/bashEchoWho.png)
 
 **Si se visualiza el mensaje command not found, considerar**
 El problema se debe a que no se ha asignado un terminal de salida al contenedor al ejecutar el comando. Cuando usas docker exec -i jenkins-server /bin/bash en Windows, el comando se ejecuta pero no hay un terminal asignado para mostrar la salida del comando ls.
@@ -89,9 +103,23 @@ docker exec -it <nombre contenedor> <programa o comando>
 
 ### Ahora puedes acceder al contenedor de jenkins y obtener la contraseña ubicada en /var/jenkins_home/secrets/initialAdminPassword
 
-# COMPLETAR
+Ejecutando los comandos:
+```
+docker exec -it jenkins-master /bin/bash
+```
 
-### Colocar una captura de pantalla de la ventana que aparece después de colocar la contraseña.
+```
+cd /var/jenkins_home/secrets
+```
+
+```
+cat initialAdminPassword
+```
+
+Se muestra la password inicial, con la que podremos acceder en la ventana del localhost
+
+![Password Inicial y Login Jenkins](imagenes/passwordInicialJenkinsLog.png)
+
 
 **Para este punto no es necesario continuar con la instalación de Jenkins**
 
